@@ -1,5 +1,4 @@
 import telebot as tb
-import typing as t
 import logging
 import re
 import sys
