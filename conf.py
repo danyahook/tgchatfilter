@@ -1,6 +1,7 @@
 class Config:
     CHANNEL_ID = -1001754918482
-    CENSOR_PATTERN = '[@#$%&*,.]'
+    CENSOR_PATTERN = '[@#$%&*]'
+    CLEAN_SENTENCE_PATTERN = '[-,!?:;.]'
 
     BOT_API_TOKEN = 'TOKEN'
     TARGET_TG_ID = (444049905, )
@@ -10,7 +11,7 @@ class Config:
     )
 
     STOP_PHRASES = ['bljat', 'ватник', '*internal screaming*', '*vine_boom.wav*', 'cушилка', 'bruh', 'не отношусь',
-                    'душнила', 'блетб', 'cук(']
+                    'душнила', 'блетб', 'блеат', 'cук(', 'наwhyя']
 
     STOP_CENSOR_PHRASES = ['314д', '314с', '314з', '6л', '6ь', 'fck', 'fuck', 'аним',
                            'безю', 'бл', 'бь', 'г', 'дроч', 'е6', 'еб', 'жоп', 'ипа', 'муд', 'нй', 'пизд', 'секс',

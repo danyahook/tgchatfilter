@@ -19,7 +19,7 @@ logger.addHandler(handler)
 
 
 def have_stop_phrase(message: str) -> bool:
-    message_text = message.lower()
+    message_text = re.sub(conf.CLEAN_SENTENCE_PATTERN, '', message.lower())
     message_words = set(message_text.split(' '))
 
     has_censor_symbol = re.compile(conf.CENSOR_PATTERN)
