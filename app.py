@@ -1,5 +1,6 @@
 import telebot as tb
 import logging
+import random as rnd
 import re
 import sys
 
@@ -40,12 +41,42 @@ def have_stop_phrase(message: str) -> bool:
 def create_bot(api: str) -> tb.TeleBot:
     bot = tb.TeleBot(api)
 
+    @bot.message_handler(commands=['soldier_mod'])
+    def handler_login(message):
+        conf.SOLDIER_MOD = not conf.SOLDIER_MOD
+        bot.send_message(message.from_user.id, f"Игорь Стрелков переведен в статус: {conf.SOLDIER_MOD}")
+
+    @bot.message_handler(commands=['soldier_mod_status'])
+    def handler_login(message):
+        bot.send_message(message.from_user.id, f"Игорь Стрелков в статусе: {bool(conf.SOLDIER_MOD)}")
+
     @bot.message_handler(
         func=lambda message: message.from_user.id in conf.TARGET_TG_ID,
-        content_types=['text', 'sticker']
+        content_types=['text', 'sticker', 'photo', 'document']
     )
     @bot.edited_message_handler(func=lambda message: message.from_user.id in conf.TARGET_TG_ID)
     def echo_message(message: Message) -> None:
+        if conf.SOLDIER_MOD:
+            if message.content_type == 'text':
+                message_text = re.sub(conf.CLEAN_SENTENCE_PATTERN, '', message.text.lower())
+                if message_text not in conf.SOLDIER_MOD_PHRASES:
+                    bot.delete_message(message.chat.id, message.message_id)
+                    bot.send_message(conf.CHANNEL_ID, f'🪖 <i>"{message.text}"</i>', parse_mode='HTML')
+                    bot.send_message(
+                        message.chat.id,
+                        rnd.choice(conf.BOT_SOLDIER_PROSES)
+                    )
+            elif message.content_type == 'photo':
+                bot.delete_message(message.chat.id, message.message_id)
+                bot.send_message(
+                    message.chat.id,
+                    rnd.choice(conf.BOT_SOLDIER_PROSES)
+                )
+            else:
+                bot.delete_message(message.chat.id, message.message_id)
+                bot.send_message(message.chat.id, 'Улыбышев! Отставить!')
+            return None
+
         if message.content_type == 'sticker' and message.sticker.set_name in conf.IGNORED_STICKERS:
             bot.delete_message(message.chat.id, message.message_id)
             bot.send_message(conf.CHANNEL_ID, '📄')
