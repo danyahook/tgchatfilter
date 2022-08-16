@@ -9,7 +9,7 @@ class Config:
     LAST_SOLDER_MESSAGE = datetime.now() - timedelta(minutes=1)
     SOLDIER_MOD_SPAM_TIME = timedelta(minutes=1)
     CENSOR_PATTERN = '[@#$%&*^]'
-    CLEAN_SENTENCE_PATTERN = '[-,[]|!?:;.]'
+    CLEAN_SENTENCE_PATTERN = '[-,|!?:;.\[\]]'
 
     BOT_API_TOKEN = '5390283097:AAGgMJOSY99txo4TyblueDni8qmq02JMec4'
     # TARGET_TG_ID = (316237594, )
@@ -25,7 +25,7 @@ class Config:
                     'душнила', 'блетб', 'блеат', 'cук(', 'сук(' 'наwhyя', 'наwhyя', 'стицкер', '0)0']
 
     STOP_CENSOR_PHRASES = ['314д', '314с', '314з', 'fck', 'fuck', 'аним', 'безю', 'бл', 'бь', 'г', 'дроч', 'еб', 'жоп',
-                           'ипа', 'муд', 'нй', 'пизд', 'секс', 'сук', 'хам', 'хер', 'хи', 'хре', 'ху', 'xу', 'хy', 'xy',
+                           'ипа', 'муд', 'нй', 'пизд', 'секс', 'сук', 'хам', 'хер', 'хи', 'хре', 'ху',
                            'хя', 'член', 'ёб']
 
     SOLDIER_MOD_PHRASES = ['так точно', 'никак нет']
