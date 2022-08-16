@@ -1,4 +1,5 @@
 import telebot as tb
+import typing as t
 import logging
 import os
 import pytesseract
@@ -24,10 +25,19 @@ handler.setFormatter(Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
 logger.addHandler(handler)
 
 
-def have_stop_phrase(message: str) -> bool:
-    if message is None:
+def have_stop_phrase(message: str, reply_text: t.Union[str, None] = None) -> bool:
+    if message is None or reply_text is None:
         return False
     message_text = re.sub(conf.CLEAN_SENTENCE_PATTERN, '', message.lower())
+
+    # Плохо, но пока что так
+    re_question_words = re.findall("што|что|кто\w+", message_text.lower())
+    if reply_text and re_question_words:
+        reply_text_clear = re.sub(conf.CLEAN_SENTENCE_PATTERN, '', reply_text.lower())
+        for question_word in re_question_words:
+            if re.sub(r'што|что|кто', '', question_word) in reply_text_clear:
+                return True
+
     message_words = set(message_text.split(' '))
 
     has_censor_symbol = re.compile(conf.CENSOR_PATTERN)
@@ -139,7 +149,8 @@ def create_bot(api: str) -> tb.TeleBot:
 
             elif message.content_type == 'text':
                 logger.info('[%s] MSG: %s' % (event_type, message.text))
-                if have_stop_phrase(message.text):
+                reply_text = message.reply_to_message.text if message.reply_to_message else None
+                if have_stop_phrase(message.text, reply_text):
                     bot.delete_message(message.chat.id, message.message_id)
                     bot.send_message(conf.CHANNEL_ID, f'<b>[{event_type}]</b>🤬 <i>"{message.text}"</i>',
                                      parse_mode='HTML')
